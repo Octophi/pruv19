@@ -1,0 +1,177 @@
+\documentclass[a4paper]{article}
+
+\usepackage{qcircuit}
+\usepackage{verbatim}
+
+\newcommand\0{\mathbf{0}}
+\newcommand\bb{\mathbf{b}}
+\newcommand\ee{\mathbf{e}}
+\newcommand\pp{\mathbf{p}}
+\newcommand\vv{\mathbf{v}}
+\newcommand\ww{\mathbf{w}}
+\newcommand\xx{\mathbf{x}}
+\newcommand\yy{\mathbf{y}}
+\newcommand\zz{\mathbf{z}}
+\newcommand\CC{\mathbb{C}}
+\newcommand\FF{\mathbb{F}}
+\newcommand\RR{\mathbb{R}}
+\newcommand\ZZ{\mathbb{Z}}
+\newcommand\Cb{\mathbf{C}}
+\newcommand\Nb{\mathbf{N}}
+\newcommand\Ec{\mathcal{E}}
+\newcommand\Mc{\mathcal{M}}
+\newcommand\Pc{\mathcal{P}}
+\newcommand\Vc{\mathcal{V}}
+\newcommand\GL{\mathit{GL}}
+
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\green}[1]{\textcolor{green}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\bes} {\begin{subequations}}
+\newcommand{\ees} {\end{subequations}}
+\newcommand{\bea} {\begin{eqnarray}}
+\newcommand{\eea} {\end{eqnarray}}
+\newcommand{\beq} {\begin{equation}}
+\newcommand{\eeq} {\end{equation}}
+\newcommand{\msf}{\mathsf}
+\newcommand{\mrm}{\mathrm}
+\newcommand{\mbf}{\mathbf}
+\newcommand{\mbb}{\mathbb}
+\newcommand{\mc}{\mathcal}
+\def\al{\alpha}
+\def\b{\beta}
+\def\ox{\otimes}
+\def\Tr{\textrm{Tr}}
+\def\Pr{\textrm{Pr}}
+\newcommand{\Var}{\textrm{Var}} 
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+\newcommand{\ketbra}[2]{|{#1}\>\!\<#2|}
+\newcommand{\bracket}[2]{\<{#1}|{#2}\>}
+\newcommand{\bracketsub}[3]{\left\<{#1}\left|{#2}\right|{#3}\right\>}
+\newcommand{\ketbrasub}[3]{|{#1}\>_{#3}\<#2|}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\ident}{\mathds{1}}
+\newcommand{\ignore}[1]{}
+\newcommand{\x}[1]{\textcolor{red}{\sout{#1}}}
+\newcommand{\reef}[1]{(\ref{#1})}
+\newcommand{\prob}[2]{|\bracket{#1}{#2}|^2}
+\newcommand{\tr}{\text{Tr}}
+\newcommand{\swap}{\text{Swap}}
+\newcommand{\tzero}{\tilde{0}}
+\newcommand{\tone}{\tilde{1}}
+\def\Eg{E_{\textrm{gap}}}
+\def\mC{\mathcal{C}}
+\def\PC{P_{\mathcal{C}}}
+\def\Heff{H_{\textrm{eff}}}
+
+%redefined math symbols taking no arguments
+\newcommand\<{\langle}
+\renewcommand\>{\rangle}
+\renewcommand\iff{\Leftrightarrow}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\usepackage{csquotes}
+\usepackage{braket}
+
+\title{PRUV 2019}
+\author{Joey Li}
+
+\begin{document}
+\maketitle
+
+\section{Calculations}
+
+Suppose we attempt to purify several copies of a mixed state $\rho = a\ketbra{1}{1} + (1-a)\frac{1}{2}I$ by the simple naive procedure: tensor two copies of $\rho$ together, measure the swap operator on the pair, and trace over one of the qubits. In this section we will seek to optimize this procedure and determine how far it can take us.
+
+We project onto the positive and negative eigenspaces of Swap by projectors $\frac{I+Swap}{2}$ and $\frac{I-Swap}{2}$. Note that these spaces are spanned by $\{\ket{00}, \ket{11}, \frac{\ket{01}+\ket{10}}{2}\}$ and $\{\frac{\ket{01}-\ket{10}}{2}\}$, respectively. We may quickly see that if we project onto the negative eigenspace and trace out a qubit, our resulting state is the completely mixed state. However, if we project onto the positive eigenspace, we will gain information.
+
+First, the probability that we will obtain a measurement in the positive eigenspace is 
+\begin{align*}
+    \Tr(\frac{I+Swap}{2} (\rho\otimes\rho)\frac{I+Swap}{2}) &= \Tr(\frac{I+Swap}{2} (\rho\otimes\rho)) \\
+    &= \frac{1}{2} \Tr(\rho\otimes\rho) + \frac{1}{2}\Tr(Swap(\rho\otimes\rho)) \\
+    &= \frac{1}{2}(\Tr(\rho)^2 + \Tr(\rho^2)) \\
+    &= \frac{1}{2}(1+\Tr(\rho^2))
+\end{align*}
+where we have simplified using $\Tr(a\otimes b) = \Tr(a)\Tr(b)$ and $\Tr(Swap(a\otimes b)) = \Tr(ab)$.
+
+Next, the outcome of the measurement in this case comes out to 
+
+\begin{align*}
+    \frac{I+Swap}{2} (\rho\otimes\rho)\frac{I+Swap}{2} &= \frac{1}{4}(\rho\otimes\rho + Swap(\rho\otimes\rho) + (\rho\otimes\rho)Swap + Swap(\rho\otimes\rho)Swap) \\
+    &= \frac{1}{4}(2\rho\otimes\rho + Swap(\rho\otimes\rho) + (\rho\otimes\rho)Swap)
+\end{align*}
+and noting that this expression is symmetric in both qubits, we may trace over one of them, using the fact that 
+\begin{align*}
+    \Tr_B(Swap(\rho\otimes\rho)) &= \Tr_B(\sum_{i,j} \ketbra{i}{j}\otimes \ketbra{j}{i} (\rho\otimes\rho)) \\
+    &= \Tr_B(\sum_{i,j} \ketbra{i}{j}\rho \otimes \ketbra{j}{i}\rho) \\
+    &= \sum_{i,j} \Tr(\ketbra{j}{i}\rho) \ketbra{i}{j}\rho \\
+    &= \sum_{i,j}\ketbra{i}{i}\rho\ketbra{j}{j}\rho \\
+    &= \rho^2
+\end{align*}
+and the same result holds for $\Tr_B((\rho\otimes\rho) Swap)$ so we have output
+
+\begin{align*}
+    \frac{1}{2}\rho + \frac{1}{4}(\Tr_B(Swap(\rho\otimes\rho) + (\rho\otimes\rho)Swap)) &= \frac{1}{2}(\rho+\rho^2)
+\end{align*}
+
+Notice we can generalize this for two different input states $\rho_1$, $\rho_2$. In this case, we get a probability of $\frac{1}{2}(1+\Tr(\rho_1\rho_2))$ of projecting onto the positive eigenspace, with resulting state $\frac{1}{4}(\rho_1+\rho_2+\rho_1\rho_2+\rho_2\rho_1)$. 
+
+Now we tackle the following problem: given $n$ copies of a mixed state $\rho = a\ketbra{1}{1}+(1-a)\frac{1}{2}I$, what is the greatest expected fidelity we can achieve through a process of repeatedly measuring Swap operators on pairs of qubits? 
+
+We can carry out the $n=2$ case first as a sanity check. Our expected fidelity is $$P(+1) \cdot F(+1) + P(-1)F(-1)$$ for $F(a)$ the fidelity of an outcome $a$ with $\ketbra{1}{1}$ and $P(a)$ the probability of projecting onto $a$. Noting that the fidelity of $\rho = a\ketbra{1}{1} + (1-a)\frac{1}{2}I$ with $\ketbra{1}{1}$ is $\bracketsub{1}{a\ketbra{1}{1}+(1-a)\frac{1}{2}I}{1} = a + \frac{1}{2}(1-a) = \frac{1}{2}(1+a)$, we may substitute in to get $$\frac{1}{2}(1+\Tr(\rho^2))\cdot \frac{1}{2}(1+?) + \frac{1}{2}(1-\Tr(\rho^2))\cdot \frac{1}{2}$$
+
+where the $?$ is obtained from the state $\frac{\rho+\rho^2}{1+\Tr(\rho^2)}.$ Now we wish to parameterize everything in terms of $a$. Note that $\rho^2 = (a^2+a(1-a))\ketbra{1}{1} + (\frac{1}{2}(1-a)^2) \frac{1}{2}I = a\ketbra{1}{1} + (\frac{1}{2}(1-a)^2)\frac{1}{2}I$. Then the trace is $a + \frac{1}{2}(1-a)^2 = \frac{1}{2}(1+a^2)$. Plugging into this mess, we get that the output state is 
+
+\begin{align*}
+    \frac{(a+a)\ketbra{1}{1} + (1-a + \frac{1}{2}(1-a)^2)\frac{1}{2}I}{1+\frac{1}{2}(1+a^2)} &= \frac{2a\ketbra{1}{1} + (1-a)(\frac{3}{2}-\frac{1}{2}a)\frac{1}{2}I}{\frac{3}{2} + \frac{1}{2}a^2} \\
+    &= \frac{4a\ketbra{1}{1} + (1-a)(3-a)\frac{1}{2}I}{3+a^2}.
+\end{align*}
+As a sanity check, note that $4a+(1-a)(3-a) = 3+a^2$ and so this corresponds to the form we had earlier. Then our fidelity is simply $\frac{1}{2}(1+\frac{4a}{3+a^2})$ and plugging back in for our expected value, we obtain 
+\begin{align*}
+    \frac{1}{2}(1+\frac{1}{2}(1+a^2)) \cdot \frac{1}{2}(1+ \frac{4a}{3+a^2}) + \frac{1}{2}(1-\frac{1}{2}(1+a^2))\cdot \frac{1}{2} &= \frac{1}{8} ((3+a^2) ( 1+\frac{4a}{3+a^2}) + (1-a^2)) \\
+    &= \frac{1}{8} (3+a^2 + 4a + 1-a^2) \\
+    &= \frac{1}{8} (4+4a) \\
+    &= \frac{1}{2}(1+a)
+\end{align*}
+which actually just turns out to be our original fidelity. Thus, in the $n=2$ case, there is no way to increase the expected fidelity through this process.
+
+However, not all hope is lost. Let us consider the $n=3$ case. Take the following strategy: measure the Swap operator on the first two qubits, and if this projects onto the positive eigenspace, trace out over one qubit to get a more purified qubit, and if it projects onto the negative eigenspace, simply take the third qubit.
+
+Reusing some calculations from above, we obtain the expected fidelity 
+
+\begin{align*}
+    \frac{1}{8}(3+a^2+4a + (1-a^2)(1+a)) &= \frac{1}{8}(a^2+4a+3 + 1+a-a^2-a^3) \\
+    &= \frac{1}{8}(4+5a-a^3)
+\end{align*}
+
+which is better than doing nothing, for all values of $a$, as expected. 
+
+Note ther
+
+
+% probably have to be a bit more careful than that
+\begin{comment}
+
+But first, let's optimize our earlier calculation. We had \begin{align*}
+    \frac{1}{2}(1+\Tr(\rho^2))\cdot \frac{1}{2}(1+ \frac{\bracketsub{1}{\rho+\rho^2}{1}}{1+\Tr(\rho^2)}) + \frac{1}{2}(1-\Tr(\rho^2))\cdot\frac{1}{2}  &= \frac{1}{4}(1+\Tr(\rho^2) + \bracketsub{1}{\rho+\rho^2}{1} + 1-\Tr(\rho^2)) \\
+    &= \frac{1}{4}(2+\bracketsub{1}{\rho+\rho^2}{1})
+\end{align*}
+
+and this agrees with our earlier calculation since $\bracketsub{1}{\rho+\rho^2}{1} = \bracketsub{1}{\rho}{1}+\bracketsub{1}{\rho^2}{1} = \frac{1}{2}(1+a) + (a + \frac{1}{4}(1-a)^2) = $
+
+\end{comment}
+
+\end{document}
